@@ -1,0 +1,47 @@
+$drawer-width: 320px;
+$transition-duration: 0.5s;
+
+#drawer-section {
+  width: $drawer-width;
+  height: 100vh;
+  background-color: white;
+  border-right: 1px solid #eaecee;
+  position: fixed; /*Without it #page-section will be fixed at it's position. won't go left even #drawer-conttent is goes left*/
+  top: 0;
+  z-index: 2; /*Makes it come on top of it's sibling i.e., #page-content*/
+
+  /* If its content goes out of `vh` `overfloy-y` becomes `scroll` else `initial`. used auto because at `initial` scroll bar won't show */
+  overflow-y: auto;
+
+  transition: transform $transition-duration;
+}
+
+/* Page section stylining */
+#pages-section {
+  background-color: white;
+  left: $drawer-width;
+  width: 100%;
+  height: 100vh;
+  /**
+   * without `fixed` left will not work
+   * If `absolute` or `relative` is used width shold be removed or else it will take 100vw px
+   */
+  position: fixed;
+
+  /* If its content goes out of `vh` `overfloy-y` becomes `scroll` else `initial`. used auto because at `initial` scroll bar won't show */
+  overflow-y: auto;
+
+  transition: left $transition-duration;
+}
+
+#overlay {
+  position: absolute; /*Goes above of its sublings in it's parent*/
+  width: 100vw;
+  height: 100vh;
+  visibility: hidden; // initially it's hidden
+  opacity: 0.5;
+  background-color: transparent;
+  z-index: 1; /* It sjould be below drawer & above pages content*/
+
+  transition: visibility 0.4s, background-color 0.4s;
+}

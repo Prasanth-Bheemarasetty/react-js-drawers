@@ -1,0 +1,8 @@
+/*
+In Next.JS css modules should contains pure selectors only
+pure selectors must contain at least one local class or id
+*/
+body {
+  padding: 0;
+  margin: 0;
+}
