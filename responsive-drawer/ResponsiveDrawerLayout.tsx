@@ -3,7 +3,7 @@ import { Provider } from "react-redux";
 import Drawer from "./Drawer";
 
 import React from "react";
-import { _responsiveDrawerStore } from "../../components/responsive-drawer/store";
+import { _responsiveDrawerStore } from "./store";
 
 export interface _ResponsiveDrawerProps {
   drawerContent: JSX.Element;
