@@ -20,7 +20,7 @@ $transition-duration: 0.5s;
 #pages-section {
   background-color: white;
   left: $drawer-width;
-  width: 100%;
+  width: calc(100% - $drawer-width);
   height: 100vh;
   /**
    * without `fixed` left will not work

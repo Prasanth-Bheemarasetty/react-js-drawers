@@ -77,7 +77,7 @@ export default function _Drawer(props: _ResponsiveDrawerProps) {
          * It will closed but overlay remains
          */
         setDrawerStyle({ ...drawerInitStyle, transform: "translateX(-100%)" });
-        setPagesStyle({ ...pagesInitStyle, left: "0" });
+        setPagesStyle({ ...pagesInitStyle, left: "0", width: "100%" });
       }
       //Setting `isMob for redux. used in `toggleDrawer` only
       dispatch(responsiveDrawerActions.setIsMob(true));
@@ -85,7 +85,7 @@ export default function _Drawer(props: _ResponsiveDrawerProps) {
       /**
        * If responsive is opted or desktop mode(vw >= 992)
        */
-      setDrawerStyle(drawerInitStyle);
+      setDrawerStyle({ ...drawerInitStyle });
       setPagesStyle(pagesInitStyle);
 
       /**

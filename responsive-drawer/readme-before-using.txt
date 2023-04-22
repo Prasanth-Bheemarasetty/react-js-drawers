@@ -1,5 +1,5 @@
 1) install
-npm install react-router-dom react-redux @reduxjs/toolkit
+npm install react-router-dom react-redux @reduxjs/toolkit sass
 
 2) If you are using 
 	a) ReactJS:
