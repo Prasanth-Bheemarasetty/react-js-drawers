@@ -6,7 +6,7 @@ $transition-duration: 0.5s;
   height: 100vh;
   background-color: white;
   border-right: 1px solid #eaecee;
-  position: fixed; /*Without it #page-section will be fixed at it's position. won't go left even #drawer-conttent is goes left*/
+  position: fixed; // without `fixed` left will not work
   top: 0;
   z-index: 2; /*Makes it come on top of it's sibling i.e., #page-content*/
 
