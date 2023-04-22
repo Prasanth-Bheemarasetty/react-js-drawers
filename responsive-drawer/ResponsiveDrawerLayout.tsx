@@ -7,6 +7,9 @@ import { _responsiveDrawerStore } from "../../components/responsive-drawer/store
 
 export interface _ResponsiveDrawerProps {
   drawerContent: JSX.Element;
+  breakpointWidth?: number;
+  drawerWidth?: number;
+  drawerBorderColor?: string;
   isResponsive?: boolean;
   children: React.ReactNode; // Children must be same as this
 }
@@ -16,13 +19,22 @@ export interface _ResponsiveDrawerProps {
  */
 
 export default function ResponsiveDrawerLayout({
+  breakpointWidth = 992,
+  drawerWidth = 320,
+  drawerBorderColor = "#edeef0",
   isResponsive = true, // setting default value for props
   ...props
 }: _ResponsiveDrawerProps) {
   return (
     // Adding `plainDrawerStore` DrawerLayout & its childs
     <Provider store={_responsiveDrawerStore}>
-      <Drawer drawerContent={props.drawerContent} isResponsive={isResponsive}>
+      <Drawer
+        drawerContent={props.drawerContent}
+        breakpointWidth={breakpointWidth}
+        drawerWidth={drawerWidth}
+        drawerBorderColor={drawerBorderColor}
+        isResponsive={isResponsive}
+      >
         {props.children}
       </Drawer>
     </Provider>

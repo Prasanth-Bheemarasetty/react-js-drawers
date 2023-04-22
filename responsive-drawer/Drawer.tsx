@@ -8,7 +8,7 @@ import { ResponsiveDrawerStateType, responsiveDrawerActions } from "./store";
 
 export default function _Drawer(props: _ResponsiveDrawerProps) {
   // Breakpoint width
-  const breakpointWidth = 992;
+  const breakpointWidth = props.breakpointWidth!!;
 
   // Redux dispatcher
   const dispatch = useDispatch();
@@ -16,11 +16,24 @@ export default function _Drawer(props: _ResponsiveDrawerProps) {
   /**
    * Declaring Styles
    */
-  const [drawerStyle, setDrawerStyle] = useState<CSSProperties>({});
-  const [pagesStyle, setPagesStyle] = useState<CSSProperties>({});
+  // For Drawer
+  const drawerInitStyle: CSSProperties = {
+    width: props.drawerWidth,
+    borderRightColor: props.drawerBorderColor,
+  }; // To make this style will remain even the drawer style is changed. i.e., every drawer style should contain `initStyles`
+  const [drawerStyle, setDrawerStyle] =
+    useState<CSSProperties>(drawerInitStyle);
+
+  // For Pages
+  const pagesInitStyle: CSSProperties = { left: props.drawerWidth };
+  const [pagesStyle, setPagesStyle] = useState<CSSProperties>(pagesInitStyle);
+
+  // For Overlay
   const [overlayStyle, setOverlayStyle] = useState<CSSProperties>({});
 
-  // Indicating the location of drawer portal
+  /**
+   * Indicating the location of drawer portal
+   */
   const portalTargetNode = document.getElementById("pb93-externals")!!;
 
   /**
@@ -63,8 +76,8 @@ export default function _Drawer(props: _ResponsiveDrawerProps) {
          * then when screen width is changed in mob mode while drawer opened
          * It will closed but overlay remains
          */
-        setDrawerStyle({ transform: "translateX(-100%)" });
-        setPagesStyle({ left: "0" });
+        setDrawerStyle({ ...drawerInitStyle, transform: "translateX(-100%)" });
+        setPagesStyle({ ...pagesInitStyle, left: "0" });
       }
       //Setting `isMob for redux. used in `toggleDrawer` only
       dispatch(responsiveDrawerActions.setIsMob(true));
@@ -72,8 +85,8 @@ export default function _Drawer(props: _ResponsiveDrawerProps) {
       /**
        * If responsive is opted or desktop mode(vw >= 992)
        */
-      setDrawerStyle({});
-      setPagesStyle({});
+      setDrawerStyle(drawerInitStyle);
+      setPagesStyle(pagesInitStyle);
 
       /**
        *
