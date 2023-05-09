@@ -1,53 +1,62 @@
+import { CSSProperties, useEffect, useState } from "react";
 import styles from "./Drawer.module.scss";
 
-import { CSSProperties, Fragment, useEffect, useState } from "react";
-import ReactDOM from "react-dom";
-import { useDispatch, useSelector } from "react-redux";
 import { _ResponsiveDrawerProps } from "./ResponsiveDrawerLayout";
+import { createPortal } from "react-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { ResponsiveDrawerStateType, responsiveDrawerActions } from "./store";
 
 export default function _Drawer(props: _ResponsiveDrawerProps) {
-  // Breakpoint width
-  const breakpointWidth = props.breakpointWidth!!;
-
-  // Redux dispatcher
-  const dispatch = useDispatch();
-
   /**
-   * Declaring Styles
+   * Variables
    */
-  // For Drawer
-  const drawerInitStyle: CSSProperties = {
-    width: props.drawerWidth,
-    borderRightColor: props.drawerBorderColor,
-  }; // To make this style will remain even the drawer style is changed. i.e., every drawer style should contain `initStyles`
+  const dispatch = useDispatch();
+  const isDrawerOpened = useSelector(
+    (state: ResponsiveDrawerStateType) => state.isDrawerOpened
+  );
+  const [isComponentLoaded, setIsComponentLoaded] = useState(false);
+  //Indicating the location of drawer portal
+  const portalTargetNode = document.getElementById("pb93-externals")!!;
+  //
+  //Styles
+  //
+  let drawerInitStyle: CSSProperties = {};
+  let pagesInitStyle: CSSProperties = {};
+  // Setting responsive styles
+  if (!isDesktop(window.innerWidth) || !props.isResponsive) {
+    // if not in desktop mode or isResponsive set to false
+    drawerInitStyle = {
+      transform: "translateX(-100%)",
+    };
+    pagesInitStyle = { left: 0 };
+  }
+  // Setting state styles
   const [drawerStyle, setDrawerStyle] =
     useState<CSSProperties>(drawerInitStyle);
-
-  // For Pages
-  const pagesInitStyle: CSSProperties = { left: props.drawerWidth };
   const [pagesStyle, setPagesStyle] = useState<CSSProperties>(pagesInitStyle);
-
-  // For Overlay
   const [overlayStyle, setOverlayStyle] = useState<CSSProperties>({});
 
-  /**
-   * Indicating the location of drawer portal
-   */
-  const portalTargetNode = document.getElementById("pb93-externals")!!;
+  const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
 
   /**
-   * Setting component is loaded
+   * Functions
    */
-  const [isComponentLoaded, setIsComponentLoaded] = useState(false);
+  function isDesktop(windowWidth: number): boolean {
+    return windowWidth >= props.breakpointWidth!!;
+  }
+
+  /**
+   * Hooks
+   */
+  // To indicate component is loaded and set drawer initial style
   useEffect(() => {
+    // Setting component is loaded
     setIsComponentLoaded(true);
   }, []);
 
   /**
-   * Calculating realtime width & setting isMob
+   * Calculating realtime width & setting IsDrawerOpenable
    */
-  const [viewportWidth, setViewportWidth] = useState(0);
 
   useEffect(() => {
     /**
@@ -66,26 +75,11 @@ export default function _Drawer(props: _ResponsiveDrawerProps) {
     window.addEventListener("resize", resizeWidth);
 
     // setting responsiveness
-    if (viewportWidth < breakpointWidth || !props.isResponsive) {
+    if (!isDesktop(viewportWidth) || !props.isResponsive) {
       /**
-       * If `vw` < 992 or resposive is false
+       * If mobile mode or not responsive
        */
-      if (!isDrawerOpened) {
-        /**
-         * If this condition is not added,
-         * then when screen width is changed in mob mode while drawer opened
-         * It will closed but overlay remains
-         */
-        setDrawerStyle({ ...drawerInitStyle, transform: "translateX(-100%)" });
-        setPagesStyle({ ...pagesInitStyle, left: "0", width: "100%" });
-      }
-      //Setting `isMob for redux. used in `toggleDrawer` only
-      dispatch(responsiveDrawerActions.setIsMob(true));
-    } else {
-      /**
-       * If responsive is opted or desktop mode(vw >= 992)
-       */
-      setDrawerStyle({ ...drawerInitStyle });
+      setDrawerStyle(drawerInitStyle);
       setPagesStyle(pagesInitStyle);
 
       /**
@@ -97,8 +91,23 @@ export default function _Drawer(props: _ResponsiveDrawerProps) {
       setOverlayStyle({});
       dispatch(responsiveDrawerActions.setIsDrawerOpened(false));
 
-      //Setting `isMob for redux. used in `toggleDrawer` only
-      dispatch(responsiveDrawerActions.setIsMob(false));
+      //Setting `IsDrawerOpenable for redux. used in `toggleDrawer` only
+      dispatch(responsiveDrawerActions.setIsDrawerOpenable(true));
+    } else {
+      /**
+       * If desktop mode or resposive is true
+       */
+      if (!isDrawerOpened) {
+        /**
+         * If this condition is not added,
+         * then when screen width is changed in mob mode while drawer opened
+         * It will closed but overlay remains
+         */
+        setDrawerStyle({ transform: "translateX(0)" });
+        setPagesStyle({ left: props.drawerWidth });
+      }
+      //Setting `IsDrawerOpenable for redux. used in `toggleDrawer` only
+      dispatch(responsiveDrawerActions.setIsDrawerOpenable(false));
     }
 
     /**
@@ -112,31 +121,37 @@ export default function _Drawer(props: _ResponsiveDrawerProps) {
    * Toggling drawer
    *
    */
-  const isDrawerOpened = useSelector(
-    (state: ResponsiveDrawerStateType) => state.isDrawerOpened
-  );
   useEffect(() => {
-    if (isDrawerOpened) {
-      // showing the overlay below drawer
-      setOverlayStyle({ backgroundColor: "black", visibility: "visible" });
-      // Opening the drawer
-      setDrawerStyle({ transform: "translateX(0%)" });
-    } else {
-      // Hiding the overlay
-      setOverlayStyle({});
-      // Closing the drawer
-      setDrawerStyle({ transform: "translateX(-100%)" });
+    if (!(isDesktop(viewportWidth) && props.isResponsive)) {
+      // We can open drawer if in desktop mode & responsive set to true
+      // else we can't
+      if (isDrawerOpened) {
+        // showing the overlay below drawer
+        setOverlayStyle({ backgroundColor: "black", visibility: "visible" });
+        // Opening the drawer
+        setDrawerStyle({ transform: "translateX(0%)" });
+      } else {
+        // Hiding the overlay
+        setOverlayStyle({});
+        // Closing the drawer
+        setDrawerStyle({ transform: "translateX(-100%)" });
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDrawerOpened]);
 
   /**
-   *
    * JSX
-   *
    */
-
   return (
-    <main id="main">
+    <div
+      id="main"
+      style={
+        {
+          "--drawer-width": `${props.drawerWidth!!}px`,
+        } as any
+      }
+    >
       {
         /**
          * `createPortal()` is executed when component is loaded completely
@@ -144,8 +159,15 @@ export default function _Drawer(props: _ResponsiveDrawerProps) {
          * 'Target Container (#pb93-externals) is not a DOM element'
          */
         isComponentLoaded &&
-          ReactDOM.createPortal(
-            <Fragment>
+          createPortal(
+            <div
+              style={
+                {
+                  "--drawer-width": `${props.drawerWidth!! - 1}px`,
+                  "--drawer-border-color": `${props.drawerBorderColor}`,
+                } as any
+              }
+            >
               <section id={styles["drawer-section"]} style={drawerStyle}>
                 {props.drawerContent}
               </section>
@@ -157,13 +179,13 @@ export default function _Drawer(props: _ResponsiveDrawerProps) {
                   dispatch(responsiveDrawerActions.setIsDrawerOpened(false));
                 }}
               />
-            </Fragment>,
+            </div>,
             portalTargetNode
           )
       }
       <section id={styles["pages-section"]} style={pagesStyle}>
         {props.children}
       </section>
-    </main>
+    </div>
   );
 }

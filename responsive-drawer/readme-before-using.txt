@@ -12,3 +12,15 @@ npm install react-router-dom react-redux @reduxjs/toolkit sass
 	b) Next.js (13 with app dir):
 		1. make sure you add 
 			<div id="pb93-externals"></div> as a first element of <body> in `src/app/layout.[js/jsx/tsx]`
+
+
+Exported "Things" from this component:
+Drawer.tsx:
+-----------
+_Drawer
+
+store.tsx:
+-----------
+ResponsiveDrawerStateType
+_responsiveDrawerStore
+responsiveDrawerActions

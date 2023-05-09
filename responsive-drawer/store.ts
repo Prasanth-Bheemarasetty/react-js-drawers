@@ -4,9 +4,8 @@ import { configureStore, createSlice, PayloadAction } from "@reduxjs/toolkit";
  * State Type
  */
 export interface ResponsiveDrawerStateType {
-  isDrawerOpened: boolean; // Indicates opening of Drawer
-  isMob: boolean;
-  isResponsive: boolean;
+  isDrawerOpened: boolean; // Indicates drawer open state
+  isDrawerOpenable: boolean; // Indicates if drawer can be opened or not | It can also be used to indicate hiding or showing of drawer open button
 }
 
 /**
@@ -14,8 +13,7 @@ export interface ResponsiveDrawerStateType {
  */
 const responsiveDrawerInitState: ResponsiveDrawerStateType = {
   isDrawerOpened: false,
-  isMob: false,
-  isResponsive: false,
+  isDrawerOpenable: false,
 };
 
 /**
@@ -30,24 +28,21 @@ const slice = createSlice({
       state: ResponsiveDrawerStateType,
       action: PayloadAction<boolean>
     ) {
-      if (state.isMob) {
+      if (state.isDrawerOpenable) {
         // Opening or closing drawer should only work in mobile sizes
         state.isDrawerOpened = action.payload;
       }
     },
-    setIsMob(state: ResponsiveDrawerStateType, action: PayloadAction<boolean>) {
-      state.isMob = action.payload;
-    },
-    setIsResponsive(
+    setIsDrawerOpenable(
       state: ResponsiveDrawerStateType,
       action: PayloadAction<boolean>
     ) {
-      state.isResponsive = action.payload;
+      state.isDrawerOpenable = action.payload;
     },
     // To handle opening & closing of drawer
     toggleDrawer(state: ResponsiveDrawerStateType) {
       // If `vw` is below given breakpoint
-      if (state.isMob) {
+      if (state.isDrawerOpenable) {
         // Toggling drawer will only work in mobile sizes
         state.isDrawerOpened = !state.isDrawerOpened;
       }
