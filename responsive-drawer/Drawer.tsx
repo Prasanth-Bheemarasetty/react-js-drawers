@@ -23,7 +23,7 @@ export default function _Drawer(props: _ResponsiveDrawerProps) {
   let drawerInitStyle: CSSProperties = {};
   let pagesInitStyle: CSSProperties = {};
   // Setting responsive styles
-  if (!isDesktop(window.innerWidth) || !props.isResponsive) {
+  if (!isBreakpointExceeded(window.innerWidth) || !props.isResponsive) {
     // if not in desktop mode or isResponsive set to false
     drawerInitStyle = {
       transform: "translateX(-100%)",
@@ -41,7 +41,7 @@ export default function _Drawer(props: _ResponsiveDrawerProps) {
   /**
    * Functions
    */
-  function isDesktop(windowWidth: number): boolean {
+  function isBreakpointExceeded(windowWidth: number): boolean {
     return windowWidth >= props.breakpointWidth!!;
   }
 
@@ -52,6 +52,7 @@ export default function _Drawer(props: _ResponsiveDrawerProps) {
   useEffect(() => {
     // Setting component is loaded
     setIsComponentLoaded(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /**
@@ -74,8 +75,15 @@ export default function _Drawer(props: _ResponsiveDrawerProps) {
      */
     window.addEventListener("resize", resizeWidth);
 
+    // Updating redux state with is Breakpoint Reached
+    dispatch(
+      responsiveDrawerActions.setIsBreakpointExceeded(
+        isBreakpointExceeded(viewportWidth)
+      )
+    );
+
     // setting responsiveness
-    if (!isDesktop(viewportWidth) || !props.isResponsive) {
+    if (!isBreakpointExceeded(viewportWidth) || !props.isResponsive) {
       /**
        * If mobile mode or not responsive
        */
@@ -122,7 +130,7 @@ export default function _Drawer(props: _ResponsiveDrawerProps) {
    *
    */
   useEffect(() => {
-    if (!(isDesktop(viewportWidth) && props.isResponsive)) {
+    if (!(isBreakpointExceeded(viewportWidth) && props.isResponsive)) {
       // We can open drawer if in desktop mode & responsive set to true
       // else we can't
       if (isDrawerOpened) {

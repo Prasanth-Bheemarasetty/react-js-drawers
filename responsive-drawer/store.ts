@@ -6,6 +6,7 @@ import { configureStore, createSlice, PayloadAction } from "@reduxjs/toolkit";
 export interface ResponsiveDrawerStateType {
   isDrawerOpened: boolean; // Indicates drawer open state
   isDrawerOpenable: boolean; // Indicates if drawer can be opened or not | It can also be used to indicate hiding or showing of drawer open button
+  isBreakpointExceeded: boolean;
 }
 
 /**
@@ -14,6 +15,7 @@ export interface ResponsiveDrawerStateType {
 const responsiveDrawerInitState: ResponsiveDrawerStateType = {
   isDrawerOpened: false,
   isDrawerOpenable: false,
+  isBreakpointExceeded: false,
 };
 
 /**
@@ -46,6 +48,13 @@ const slice = createSlice({
         // Toggling drawer will only work in mobile sizes
         state.isDrawerOpened = !state.isDrawerOpened;
       }
+    },
+    // To get the drawer breakpoint width
+    setIsBreakpointExceeded(
+      state: ResponsiveDrawerStateType,
+      action: PayloadAction<boolean>
+    ) {
+      state.isBreakpointExceeded = action.payload;
     },
   },
 });
