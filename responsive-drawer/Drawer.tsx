@@ -171,7 +171,10 @@ export default function _Drawer(props: _ResponsiveDrawerProps) {
             <div
               style={
                 {
-                  "--drawer-width": `${props.drawerWidth!! - 1}px`,
+                  "--drawer-width":
+                    props.drawerWidth!! <= 0
+                      ? `${window.innerWidth - 1}px`
+                      : `${props.drawerWidth!! - 1}px`,
                   "--drawer-border-color": `${props.drawerBorderColor}`,
                 } as any
               }
