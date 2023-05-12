@@ -176,6 +176,7 @@ export default function _Drawer(props: _ResponsiveDrawerProps) {
                       ? `${window.innerWidth - 1}px`
                       : `${props.drawerWidth!! - 1}px`,
                   "--drawer-border-color": `${props.drawerBorderColor}`,
+                  "--drawer-border-width": `${props.drawerBorderWidth}px`,
                 } as any
               }
             >

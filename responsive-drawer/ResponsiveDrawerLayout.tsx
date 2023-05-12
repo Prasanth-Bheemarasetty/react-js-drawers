@@ -10,6 +10,7 @@ export interface _ResponsiveDrawerProps {
   breakpointWidth?: number;
   drawerWidth?: number;
   drawerBorderColor?: string;
+  drawerBorderWidth?: number;
   isResponsive?: boolean;
   children: React.ReactNode; // Children must be same as this
 }
@@ -22,6 +23,7 @@ export default function ResponsiveDrawerLayout({
   breakpointWidth = 992,
   drawerWidth = 320,
   drawerBorderColor = "#edeef0",
+  drawerBorderWidth = 1,
   isResponsive = true, // setting default value for props
   ...props
 }: _ResponsiveDrawerProps) {
@@ -33,6 +35,7 @@ export default function ResponsiveDrawerLayout({
         breakpointWidth={breakpointWidth}
         drawerWidth={drawerWidth}
         drawerBorderColor={drawerBorderColor}
+        drawerBorderWidth={drawerBorderWidth}
         isResponsive={isResponsive}
       >
         {props.children}

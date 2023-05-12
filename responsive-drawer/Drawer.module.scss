@@ -28,7 +28,7 @@ Portal stylings
   transform: translateX(0);
   height: 100vh;
   background-color: white;
-  border-right: 1px solid var(--drawer-border-color);
+  border-right: var(--drawer-border-width) solid var(--drawer-border-color);
   position: absolute;
 
   /* If its content goes out of `vh` `overfloy-y` becomes `scroll` else `initial`. used auto because at `initial` scroll bar won't show */
